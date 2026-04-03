@@ -2,7 +2,7 @@
 import { Suspense } from 'react'
 import ContactClient from './ContactClient'
 
-export const dynamic = 'force-dynamic'
+// export const dynamic = 'force-dynamic'
 
 export default function ContactPage() {
   return (
