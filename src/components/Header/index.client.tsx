@@ -82,7 +82,7 @@ export function HeaderClient({ header }: Props) {
 
         {/* 移动端布局 */}
         <div className="flex md:hidden items-center gap-4">
-          <LanguageSwitcher />
+          {/* <LanguageSwitcher /> */}
           <Suspense fallback={<OpenCartButton />}>
             <Cart />
           </Suspense>
