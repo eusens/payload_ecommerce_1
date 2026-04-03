@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import type { Media, Product } from '@/payload-types'
 
 import { RenderBlocks } from '@/blocks/RenderBlocks'

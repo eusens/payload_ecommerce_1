@@ -1,4 +1,5 @@
 // src/app/(app)/shop/page.tsx
+export const dynamic = 'force-dynamic'
 import { Grid } from '@/components/Grid'
 import { ProductGridItem } from '@/components/ProductGridItem'
 import configPromise from '@payload-config'
