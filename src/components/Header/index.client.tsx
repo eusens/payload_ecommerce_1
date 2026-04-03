@@ -73,7 +73,7 @@ export function HeaderClient({ header }: Props) {
 
           {/* 右侧：语言切换 + 购物车 */}
           <div className="flex items-center gap-4">
-            <LanguageSwitcher />
+            {/* <LanguageSwitcher /> */}
             <Suspense fallback={<OpenCartButton />}>
               <Cart />
             </Suspense>
