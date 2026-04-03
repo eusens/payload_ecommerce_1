@@ -1,10 +1,10 @@
 // src/app/(app)/contact/page.tsx
-export const dynamic = 'force-dynamic'  // ← 必须在最顶部，在 'use client' 之前！
-
 'use client'
 
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
+
+export const dynamic = 'force-dynamic'  // ← 放在 'use client' 之后
 
 export default function ContactPage() {
   const [status, setStatus] = useState('')
