@@ -104,7 +104,7 @@ export default function ContactClient() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-black text-white px-6 py-3 rounded w-full"
+          className="bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 px-6 py-3 rounded w-full transition-colors disabled:opacity-50"
         >
           {loading ? 'Sending...' : 'Request Quote'}
         </button>

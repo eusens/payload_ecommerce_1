@@ -47,7 +47,7 @@ export function HeaderClient({ header }: Props) {
           
           {/* 左侧：Logo + 导航 */}
           <div className="flex items-center gap-6">
-              <LogoIcon className="w-6 h-auto" />
+            <LogoIcon className="w-6 h-auto" />
             <ul className="flex gap-4 text-sm">
               {FIXED_MENU.map((item) => (
                 <li key={item.href}>
@@ -64,16 +64,18 @@ export function HeaderClient({ header }: Props) {
             </ul>
           </div>
 
-          {/* 中间：搜索栏 - 添加 Suspense */}
-          {/* <div className="flex-1 max-w-md mx-4">
+          {/* 中间：搜索栏 */}
+          <div className="flex-1 max-w-md mx-4">
             <Suspense fallback={<div className="h-10 w-full animate-pulse bg-gray-200 rounded" />}>
               <Search className="w-full" />
             </Suspense>
-          </div> */}
+          </div>
 
           {/* 右侧：语言切换 + 购物车 */}
           <div className="flex items-center gap-4">
-            {/* <LanguageSwitcher /> */}
+            <Suspense fallback={<div className="w-12 h-8" />}>
+              <LanguageSwitcher />
+            </Suspense>
             <Suspense fallback={<OpenCartButton />}>
               <Cart />
             </Suspense>
@@ -82,7 +84,9 @@ export function HeaderClient({ header }: Props) {
 
         {/* 移动端布局 */}
         <div className="flex md:hidden items-center gap-4">
-          {/* <LanguageSwitcher /> */}
+          <Suspense fallback={<div className="w-12 h-8" />}>
+            <LanguageSwitcher />
+          </Suspense>
           <Suspense fallback={<OpenCartButton />}>
             <Cart />
           </Suspense>
