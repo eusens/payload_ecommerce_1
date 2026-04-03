@@ -13,6 +13,7 @@ import {
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
+import { resendAdapter } from '@payloadcms/email-resend';
 
 import { Categories } from '@/collections/Categories'
 import { Media } from '@/collections/Media'
@@ -37,6 +38,20 @@ export default buildConfig({
     },
     user: Users.slug,
   },
+  // ✅ 正确：用 localization（不是 i18n）
+  localization: {
+  locales: [
+    { label: 'English', code: 'en' },
+    { label: '中文', code: 'zh' },
+    { label: 'Français', code: 'fr' },      // 法语
+    { label: 'Deutsch', code: 'de' },       // 德语
+    { label: 'Español', code: 'es' },       // 西班牙语
+    { label: '日本語', code: 'ja' },         // 日语
+    { label: '한국어', code: 'ko' },         // 韩语
+  ],
+  defaultLocale: 'en',
+  fallback: true,  // 任何语言缺失内容，都回退到英文
+},
   collections: [Users, Pages, Categories, Media],
   db: postgresAdapter({
     pool: {
@@ -90,4 +105,10 @@ export default buildConfig({
   // if you want to resize images, crop, set focal point, etc.
   // make sure to install it and pass it to the config.
   // sharp,
+  email: resendAdapter({
+    apiKey: process.env.RESEND_API_KEY!,
+    defaultFromAddress: process.env.RESEND_FROM_ADDRESS!,
+    defaultFromName: process.env.RESEND_FROM_NAME!,
+  }),
+
 })

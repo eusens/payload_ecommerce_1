@@ -18,6 +18,14 @@ import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
+// 固定导航菜单
+const FIXED_MENU = [
+  { label: 'Home', href: '/' },
+  { label: 'Products', href: '/shop' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+]
+
 interface Props {
   menu: Header['navItems']
 }
@@ -58,18 +66,40 @@ export function MobileMenu({ menu }: Props) {
           <SheetDescription />
         </SheetHeader>
 
-        <div className="py-4">
-          {menu?.length ? (
-            <ul className="flex w-full flex-col">
-              {menu.map((item) => (
-                <li className="py-2" key={item.id}>
-                  <CMSLink {...item.link} appearance="link" />
-                </li>
-              ))}
-            </ul>
-          ) : null}
+        {/* 固定导航菜单 */}
+        <div className="py-2">
+          <ul className="flex w-full flex-col">
+            {FIXED_MENU.map((item) => (
+              <li className="py-2" key={item.href}>
+                <Link
+                  href={item.href}
+                  onClick={closeMobileMenu}
+                  className="text-sm hover:underline"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
 
+        {/* 后台动态菜单（如果有） */}
+        {menu?.length ? (
+          <>
+            <hr className="my-2" />
+            <div className="py-2">
+              <ul className="flex w-full flex-col">
+                {menu.map((item) => (
+                  <li className="py-2" key={item.id}>
+                    <CMSLink {...item.link} appearance="link" />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        ) : null}
+
+        {/* 用户账户区域（完全保留原有功能） */}
         {user ? (
           <div className="mt-4">
             <h2 className="text-xl mb-4">My account</h2>

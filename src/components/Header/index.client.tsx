@@ -1,3 +1,4 @@
+// src/components/Header/index.client.tsx
 'use client'
 import { CMSLink } from '@/components/Link'
 import { Cart } from '@/components/Cart'
@@ -11,10 +12,20 @@ import type { Header } from 'src/payload-types'
 import { LogoIcon } from '@/components/icons/logo'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/utilities/cn'
+import { Search } from '@/components/Search'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
 type Props = {
   header: Header
 }
+
+// 固定导航菜单
+const FIXED_MENU = [
+  { label: 'Home', href: '/' },
+  { label: 'Products', href: '/shop' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+]
 
 export function HeaderClient({ header }: Props) {
   const menu = header.navItems || []
@@ -22,44 +33,61 @@ export function HeaderClient({ header }: Props) {
 
   return (
     <div className="relative z-20 border-b">
-      <nav className="flex items-center md:items-end justify-between container pt-2">
+      <nav className="flex items-center justify-between container pt-2">
+        
+        {/* 移动端菜单按钮 */}
         <div className="block flex-none md:hidden">
           <Suspense fallback={null}>
             <MobileMenu menu={menu} />
           </Suspense>
         </div>
-        <div className="flex w-full items-end justify-between">
-          <div className="flex w-full items-end gap-6 md:w-1/3">
-            <Link className="flex w-full items-center justify-center pt-4 pb-4 md:w-auto" href="/">
+
+        {/* 桌面端布局 */}
+        <div className="hidden md:flex w-full items-center justify-between">
+          
+          {/* 左侧：Logo + 导航 */}
+          <div className="flex items-center gap-6">
+            <Link href="/">
               <LogoIcon className="w-6 h-auto" />
             </Link>
-            {menu.length ? (
-              <ul className="hidden gap-4 text-sm md:flex md:items-center">
-                {menu.map((item) => (
-                  <li key={item.id}>
-                    <CMSLink
-                      {...item.link}
-                      size={'clear'}
-                      className={cn('relative navLink', {
-                        active:
-                          item.link.url && item.link.url !== '/'
-                            ? pathname.includes(item.link.url)
-                            : false,
-                      })}
-                      appearance="nav"
-                    />
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+            <ul className="flex gap-4 text-sm">
+              {FIXED_MENU.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={cn('relative navLink', {
+                      active: pathname === item.href,
+                    })}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <div className="flex justify-end md:w-1/3 gap-4">
+          {/* 中间：搜索栏 */}
+          <div className="flex-1 max-w-md mx-4">
+            <Search className="w-full" />
+          </div>
+
+          {/* 右侧：语言切换 + 购物车 */}
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
             <Suspense fallback={<OpenCartButton />}>
               <Cart />
             </Suspense>
           </div>
         </div>
+
+        {/* 移动端布局 */}
+        <div className="flex md:hidden items-center gap-4">
+          <LanguageSwitcher />
+          <Suspense fallback={<OpenCartButton />}>
+            <Cart />
+          </Suspense>
+        </div>
+
       </nav>
     </div>
   )

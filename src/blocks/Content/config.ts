@@ -36,6 +36,7 @@ const columnFields: Field[] = [
   {
     name: 'richText',
     type: 'richText',
+    localized: true, // ✅ 新增y
     editor: lexicalEditor({
       features: ({ rootFeatures }) => {
         return [

@@ -11,13 +11,21 @@ const NEXT_PUBLIC_SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://loc
 
 const nextConfig: NextConfig = {
   images: {
+    dangerouslyAllowLocalIP: true,  // ← 正确的属性名
     localPatterns: [
+      {
+        pathname: '/images/**',  // ← 添加这一行
+      },
       {
         pathname: '/api/media/file/**',
       },
     ],
     qualities: [90, 100],
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'eusens.com',
+      },
       ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
         const url = new URL(item)
 

@@ -137,6 +137,15 @@ export default async function ProductPage({ params }: Args) {
 
           <div className="basis-full lg:basis-1/2">
             <ProductDescription product={product} />
+            {/* ✅ 新增：RFQ 按钮（不要动 Add to Cart） */}
+            <div className="mt-4">
+              <Link
+                href={`/contact?product=${encodeURIComponent(product.title)}`}
+                className="block text-center border border-gray-400 text-gray-300 px-6 py-2 rounded hover:bg-gray-800"
+              >
+                Get Bulk Price
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -1,3 +1,4 @@
+// src/app/(app)/shop/page.tsx
 import { Grid } from '@/components/Grid'
 import { ProductGridItem } from '@/components/ProductGridItem'
 import configPromise from '@payload-config'
@@ -19,6 +20,28 @@ export default async function ShopPage({ searchParams }: Props) {
   const { q: searchValue, sort, category } = await searchParams
   const payload = await getPayload({ config: configPromise })
 
+  // 构建 where 条件 - 只搜索 title，不搜索 description
+  const whereConditions = []
+  
+  // 基础条件
+  whereConditions.push({
+    _status: { equals: 'published' },
+  })
+  
+  // 搜索条件 - 只搜索 title
+  if (searchValue && typeof searchValue === 'string') {
+    whereConditions.push({
+      title: { like: searchValue },
+    })
+  }
+  
+  // 分类条件
+  if (category && category !== 'all' && typeof category === 'string') {
+    whereConditions.push({
+      categories: { contains: category },
+    })
+  }
+
   const products = await payload.find({
     collection: 'products',
     draft: false,
@@ -30,47 +53,10 @@ export default async function ShopPage({ searchParams }: Props) {
       categories: true,
       priceInUSD: true,
     },
-    ...(sort ? { sort } : { sort: 'title' }),
-    ...(searchValue || category
-      ? {
-          where: {
-            and: [
-              {
-                _status: {
-                  equals: 'published',
-                },
-              },
-              ...(searchValue
-                ? [
-                    {
-                      or: [
-                        {
-                          title: {
-                            like: searchValue,
-                          },
-                        },
-                        {
-                          description: {
-                            like: searchValue,
-                          },
-                        },
-                      ],
-                    },
-                  ]
-                : []),
-              ...(category
-                ? [
-                    {
-                      categories: {
-                        contains: category,
-                      },
-                    },
-                  ]
-                : []),
-            ],
-          },
-        }
-      : {}),
+    sort: sort && typeof sort === 'string' ? sort : 'title',
+    where: whereConditions.length === 1 
+      ? whereConditions[0] 
+      : { and: whereConditions },
   })
 
   const resultsText = products.docs.length > 1 ? 'results' : 'result'
