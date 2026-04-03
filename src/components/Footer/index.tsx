@@ -25,11 +25,10 @@ export async function Footer() {
         <div className="flex w-full flex-col gap-6 border-t border-neutral-200 py-12 text-sm md:flex-row md:gap-12 dark:border-neutral-700">
           {/* 左侧：Logo */}
           <div>
-            <Link className="flex items-center gap-2 text-black md:pt-1 dark:text-white" href="/">
-              <LogoIcon className="w-6" />
-              <span className="sr-only">{SITE_NAME}</span>
-            </Link>
-          </div>
+            {/* 移除外层的 Link，因为 LogoIcon 内部已经有 Link */}
+  。        <LogoIcon className="w-6" />
+  。        <span className="sr-only">{SITE_NAME}</span>
+。        </div>。        
           
           {/* 中间：导航菜单 + 政策链接 + 社交媒体 */}
           <div className="flex-1 flex flex-col items-center gap-4">

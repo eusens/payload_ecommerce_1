@@ -1,5 +1,6 @@
 // src/components/icons/logo.tsx
 import Link from 'next/link'
+import React from 'react'
 
 export function LogoIcon({ className }: { className?: string }) {
   return (

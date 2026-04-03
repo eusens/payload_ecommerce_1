@@ -47,9 +47,7 @@ export function HeaderClient({ header }: Props) {
           
           {/* 左侧：Logo + 导航 */}
           <div className="flex items-center gap-6">
-            <Link href="/">
               <LogoIcon className="w-6 h-auto" />
-            </Link>
             <ul className="flex gap-4 text-sm">
               {FIXED_MENU.map((item) => (
                 <li key={item.href}>
@@ -66,9 +64,11 @@ export function HeaderClient({ header }: Props) {
             </ul>
           </div>
 
-          {/* 中间：搜索栏 */}
+          {/* 中间：搜索栏 - 添加 Suspense */}
           <div className="flex-1 max-w-md mx-4">
-            <Search className="w-full" />
+            <Suspense fallback={<div className="h-10 w-full animate-pulse bg-gray-200 rounded" />}>
+              <Search className="w-full" />
+            </Suspense>
           </div>
 
           {/* 右侧：语言切换 + 购物车 */}
