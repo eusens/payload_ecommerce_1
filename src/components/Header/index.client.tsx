@@ -65,11 +65,11 @@ export function HeaderClient({ header }: Props) {
           </div>
 
           {/* 中间：搜索栏 - 添加 Suspense */}
-          <div className="flex-1 max-w-md mx-4">
+          {/* <div className="flex-1 max-w-md mx-4">
             <Suspense fallback={<div className="h-10 w-full animate-pulse bg-gray-200 rounded" />}>
               <Search className="w-full" />
             </Suspense>
-          </div>
+          </div> */}
 
           {/* 右侧：语言切换 + 购物车 */}
           <div className="flex items-center gap-4">
