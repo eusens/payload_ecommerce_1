@@ -1,20 +1,17 @@
-export const dynamic = 'force-dynamic'
+// src/app/(app)/contact/page.tsx
+export const dynamic = 'force-dynamic'  // ← 必须在最顶部，在 'use client' 之前！
+
 'use client'
 
-import { useState, useEffect } from 'react'              // ✅ 新增 useEffect
-import { useSearchParams } from 'next/navigation'        // ✅ 新增
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 export default function ContactPage() {
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
-
-  // ✅ 新增：URL 参数读取
   const searchParams = useSearchParams()
-
-  // ✅ 新增：product state
   const [product, setProduct] = useState('')
 
-  // ✅ 新增：自动填充 product
   useEffect(() => {
     const productParam = searchParams.get('product')
     if (productParam) {
@@ -22,7 +19,6 @@ export default function ContactPage() {
     }
   }, [searchParams])
 
-  // ✅ 新增（可选）：自动滚动
   useEffect(() => {
     if (searchParams.get('product')) {
       window.scrollTo({ top: 200, behavior: 'smooth' })
@@ -42,7 +38,7 @@ export default function ContactPage() {
         fullName: formData.get('fullName'),
         email: formData.get('email'),
         company: formData.get('company'),
-        product: formData.get('product'),   // ✅ 会自动带上
+        product: formData.get('product'),
         quantity: formData.get('quantity'),
         country: formData.get('country'),
         message: formData.get('message'),
@@ -61,20 +57,15 @@ export default function ContactPage() {
   return (
     <div className="max-w-3xl mx-auto py-16 px-4">
       <h1 className="text-3xl font-bold mb-2">Request a Quote</h1>
-
-      <p className="mb-8 text-gray-600">
-        Get response within 24 hours
-      </p>
+      <p className="mb-8 text-gray-600">Get response within 24 hours</p>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-
         <input
           name="fullName"
           placeholder="Full Name *"
           required
           className="w-full border px-4 py-2 rounded"
         />
-
         <input
           name="email"
           type="email"
@@ -82,35 +73,29 @@ export default function ContactPage() {
           required
           className="w-full border px-4 py-2 rounded"
         />
-
         <input
           name="company"
           placeholder="Company"
           className="w-full border px-4 py-2 rounded"
         />
-
-        {/* ⭐ 核心：自动带参数 */}
         <input
           name="product"
-          value={product}                                  // ✅ 新增
-          onChange={(e) => setProduct(e.target.value)}     // ✅ 新增
+          value={product}
+          onChange={(e) => setProduct(e.target.value)}
           placeholder="Product / Model *"
           required
           className="w-full border px-4 py-2 rounded"
         />
-
         <input
           name="quantity"
           placeholder="Quantity (e.g. 2 units)"
           className="w-full border px-4 py-2 rounded"
         />
-
         <input
           name="country"
           placeholder="Country (e.g. UAE, USA, Germany)"
           className="w-full border px-4 py-2 rounded"
         />
-
         <textarea
           name="message"
           placeholder="Project Details / Requirements *"
@@ -118,7 +103,6 @@ export default function ContactPage() {
           rows={5}
           className="w-full border px-4 py-2 rounded"
         />
-
         <button
           type="submit"
           disabled={loading}
