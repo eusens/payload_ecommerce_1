@@ -9,12 +9,24 @@ import { redirects } from './redirects'
 
 const NEXT_PUBLIC_SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 
+// 👇 修复：确保 URL 包含协议
+const getServerUrlWithProtocol = (url: string) => {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url
+  }
+  // 生产环境默认用 https
+  return `https://${url}`
+}
+
+const serverUrlWithProtocol = getServerUrlWithProtocol(NEXT_PUBLIC_SERVER_URL)
+const serverUrlObj = new URL(serverUrlWithProtocol)
+
 const nextConfig: NextConfig = {
   images: {
-    dangerouslyAllowLocalIP: true,  // ← 正确的属性名
+    dangerouslyAllowLocalIP: true,
     localPatterns: [
       {
-        pathname: '/images/**',  // ← 添加这一行
+        pathname: '/images/**',
       },
       {
         pathname: '/api/media/file/**',
@@ -26,22 +38,16 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'eusens.com',
       },
-      ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
-        const url = new URL(item)
-
-        return {
-          hostname: url.hostname,
-          protocol: url.protocol.replace(':', '') as 'http' | 'https',
-        }
-      }),
+      // 👇 修复后的动态域名配置
+      {
+        protocol: serverUrlObj.protocol.replace(':', '') as 'http' | 'https',
+        hostname: serverUrlObj.hostname,
+      },
     ],
   },
   typescript: {
     ignoreBuildErrors: true,
   },
-  // eslint: {
-  //   ignoreDuringBuilds: true,
-  // },
   reactStrictMode: true,
   redirects,
   webpack: (webpackConfig) => {
@@ -50,7 +56,6 @@ const nextConfig: NextConfig = {
       '.js': ['.ts', '.tsx', '.js', '.jsx'],
       '.mjs': ['.mts', '.mjs'],
     }
-
     return webpackConfig
   },
   turbopack: {
