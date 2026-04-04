@@ -16,6 +16,8 @@ import { customerOnlyFieldAccess } from '@/access/customerOnlyFieldAccess'
 import { isAdmin } from '@/access/isAdmin'
 import { isDocumentOwner } from '@/access/isDocumentOwner'
 
+import { s3Storage } from '@payloadcms/storage-s3'  // 👈 添加这个导入
+
 const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Payload Ecommerce Template` : 'Payload Ecommerce Template'
 }
@@ -128,4 +130,19 @@ export const plugins: Plugin[] = [
       productsCollectionOverride: ProductsCollection,
     },
   }),
+  s3Storage({
+  collections: {
+    'media': {
+      prefix:'media'
+    },
+  },
+  bucket: process.env.S3_BUCKET || " ",
+  config: {
+    credentials: {
+      accessKeyId: process.env.S3_ACCESS_KEY_ID || " ",
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || " ",
+    },
+    region: process.env.S3_REGION,
+  },
+})
 ]
