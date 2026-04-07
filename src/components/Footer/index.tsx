@@ -26,9 +26,9 @@ export async function Footer() {
           {/* 左侧：Logo */}
           <div>
             {/* 移除外层的 Link，因为 LogoIcon 内部已经有 Link */}
-  。        <LogoIcon className="w-6" />
-  。        <span className="sr-only">{SITE_NAME}</span>
-。        </div>。        
+          <LogoIcon className="w-6" />
+          <span className="sr-only">{SITE_NAME}</span>
+        </div>      
           
           {/* 中间：导航菜单 + 政策链接 + 社交媒体 */}
           <div className="flex-1 flex flex-col items-center gap-4">

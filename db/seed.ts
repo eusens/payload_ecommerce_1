@@ -3,8 +3,18 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { products, ProductData } from './products'
 
+// ========== 分批配置（每次运行前手动修改） ==========
+// 第一次运行: START_INDEX = 0, END_INDEX = 200
+// 第二次运行: START_INDEX = 200, END_INDEX = 400
+// 第三次运行: START_INDEX = 400, END_INDEX = 600
+// ... 以此类推
+const START_INDEX = 300      // ← 修改这里：起始索引
+const END_INDEX = 500      // ← 修改这里：结束索引（不包含）
+
 const META_TITLE_MAX = 60
 const META_DESCRIPTION_MAX = 150
+
+console.log(`📊 分批导入配置: 索引 ${START_INDEX} - ${END_INDEX} (共 ${END_INDEX - START_INDEX} 个产品)`)
 
 function truncateString(str: string, maxLength: number): string {
   if (!str) return ''
@@ -61,7 +71,6 @@ async function findOrCreateCategory(payload: any, categorySlug?: string, categor
     return null
   }
   
-  // 如果没有提供 title，用 slug 作为 title
   const title = categoryTitle || categorySlug || ''
   let slug: string
   
@@ -79,7 +88,6 @@ async function findOrCreateCategory(payload: any, categorySlug?: string, categor
   }
   
   try {
-    // 1. 先查找是否存在
     const existing = await payload.find({
       collection: 'categories',
       where: {
@@ -94,7 +102,6 @@ async function findOrCreateCategory(payload: any, categorySlug?: string, categor
       return category.id
     }
     
-    // 2. 不存在则创建
     console.log(`   📝 分类不存在，正在创建: ${title}`)
     const newCategory = await payload.create({
       collection: 'categories',
@@ -124,18 +131,31 @@ async function seed() {
   
   const payload = await getPayload({ config: configPromise })
   
-  for (const item of products) {
+  // 只处理指定范围的产品
+  const productsToProcess = products.slice(START_INDEX, END_INDEX)
+  
+  console.log(`📦 本次将处理 ${productsToProcess.length} 个产品 (索引 ${START_INDEX} - ${END_INDEX - 1})`)
+  console.log(`📊 总产品数: ${products.length}, 已完成: ${START_INDEX}, 剩余: ${products.length - END_INDEX}`)
+  console.log('')
+  
+  let successCount = 0
+  let failCount = 0
+  
+  for (let i = 0; i < productsToProcess.length; i++) {
+    const item = productsToProcess[i]
+    const globalIndex = START_INDEX + i
+    
     try {
-      console.log(`📦 处理产品: ${item.title}`)
+      console.log(`📦 [${globalIndex + 1}/${products.length}] 处理产品: ${item.title.substring(0, 60)}`)
       
       // 1. 查找或创建分类
       const categoryId = await findOrCreateCategory(payload, item.categorySlug, item.categoryTitle)
       
-      // 2. 处理 meta_title（限制 60 字符）
+      // 2. 处理 meta_title
       let metaTitle = item.meta_title || item.title
       metaTitle = truncateString(metaTitle, META_TITLE_MAX)
       
-      // 3. 处理 meta_description（限制 150 字符）
+      // 3. 处理 meta_description
       let metaDescription = item.meta_description || item.description
       metaDescription = truncateString(metaDescription, META_DESCRIPTION_MAX)
       
@@ -147,10 +167,9 @@ async function seed() {
       }
       slug = slug.toLowerCase().replace(/\s+/g, '-')
       
-      // 5. 上传所有图片（主图 + 额外图片）
+      // 5. 上传所有图片
       const galleryItems: { imageId: number; order: number }[] = []
       
-      // 上传主图
       let mainImageId: number | null = null
       if (item.imageUrl) {
         console.log(`   📸 上传主图...`)
@@ -160,12 +179,11 @@ async function seed() {
         }
       }
       
-      // 上传额外图片（galleryImages）
       if (item.galleryImages && item.galleryImages.length > 0) {
         console.log(`   📸 上传 ${item.galleryImages.length} 张额外图片...`)
-        for (let i = 0; i < item.galleryImages.length; i++) {
-          const imgUrl = item.galleryImages[i]
-          const extraImageId = await uploadImageFromUrl(payload, imgUrl, `${item.title}_gallery_${i + 1}`)
+        for (let j = 0; j < item.galleryImages.length; j++) {
+          const imgUrl = item.galleryImages[j]
+          const extraImageId = await uploadImageFromUrl(payload, imgUrl, `${item.title}_gallery_${j + 1}`)
           if (extraImageId) {
             galleryItems.push({ imageId: extraImageId, order: galleryItems.length + 1 })
           }
@@ -218,18 +236,15 @@ async function seed() {
         },
       }
       
-      // 添加分类（如果有）
       if (categoryId) {
         productData.categories = [categoryId]
         console.log(`   📌 关联分类 ID: ${categoryId}`)
       }
       
-      // 设置主图（meta.image）
       if (mainImageId) {
         productData.meta.image = mainImageId
       }
       
-      // 添加 gallery（所有图片）
       if (galleryItems.length > 0) {
         productData.gallery = galleryItems.map(item => ({
           image: item.imageId,
@@ -238,29 +253,29 @@ async function seed() {
         console.log(`   🖼️  添加 ${galleryItems.length} 张图片到 gallery`)
       }
       
-      // 7. 创建产品
       const product = await payload.create({
         collection: 'products',
         data: productData,
       })
       
       console.log(`✅ 产品创建成功: ${product.title} (ID: ${product.id})`)
-      console.log(`   - slug: ${product.slug}`)
-      console.log(`   - price: $${product.priceInUSD}`)
-      console.log(`   - inventory: ${product.inventory}`)
-      console.log(`   - categories: ${product.categories?.length ? product.categories.join(', ') : '无'}`)
-      console.log(`   - meta.title: ${product.meta?.title?.length || 0}/${META_TITLE_MAX}`)
-      console.log(`   - meta.description: ${product.meta?.description?.length || 0}/${META_DESCRIPTION_MAX}`)
-      console.log(`   - gallery: ${product.gallery?.length || 0} 张图片`)
+      successCount++
       console.log('')
       
     } catch (error) {
       console.error(`❌ 导入失败: ${item.title}`, error)
+      failCount++
       console.log('')
     }
   }
   
-  console.log('🎉 种子数据导入完成！')
+  console.log('='.repeat(60))
+  console.log(`🎉 分批导入完成！`)
+  console.log(`   ✅ 成功: ${successCount} 个`)
+  console.log(`   ❌ 失败: ${failCount} 个`)
+  console.log(`   📊 本次处理范围: 索引 ${START_INDEX} - ${END_INDEX - 1}`)
+  console.log(`   💡 下次运行请修改 START_INDEX = ${END_INDEX}, END_INDEX = ${END_INDEX + 200}`)
+  console.log('='.repeat(60))
   process.exit(0)
 }
 
