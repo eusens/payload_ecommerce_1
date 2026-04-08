@@ -235,3 +235,44 @@ const queryProductBySlug = async ({ slug }: { slug: string }) => {
 
   return result.docs?.[0] || null
 }
+
+// ========== 静态生成和 ISR 配置 ==========
+
+/**
+ * 预生成产品页面
+ * 控制构建时生成的静态页面数量
+ * 可根据产品总数调整 LIMIT 值
+ */
+export async function generateStaticParams() {
+  const payload = await getPayload({ config: configPromise })
+  
+  // 调整这个数字来控制预生成的产品数量
+  // 建议值：500-1000，可根据实际情况调整
+  const LIMIT = 1000
+  
+  const products = await payload.find({
+    collection: 'products',
+    limit: LIMIT,
+    where: {
+      _status: { equals: 'published' },
+    },
+    select: {
+      slug: true,
+    },
+    sort: '-updatedAt',  // 优先生成最新更新的产品
+  })
+  
+  console.log(`🔨 预生成 ${products.docs.length} 个产品页面`)
+  
+  return products.docs.map((product) => ({
+    slug: product.slug,
+  }))
+}
+
+/**
+ * ISR 配置
+ * revalidate: 页面重新验证的时间间隔（秒）
+ * dynamicParams: 允许访问未预生成的页面，首次访问时生成并缓存
+ */
+export const revalidate = 3600  // 1小时
+export const dynamicParams = true  // 按需生成未预制的页面
