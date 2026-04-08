@@ -8,16 +8,20 @@ interface BreadcrumbProps {
 export function ProductBreadcrumb({ product }: BreadcrumbProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'https://www.2000-watt-inverter.com'
   
-  // 获取第一个分类的名称（如果存在）
+  // 获取第一个分类的信息
+  let categoryId: number | null = null
   let categoryName: string | null = null
-  let categorySlug: string | null = null
   
   if (product.categories && product.categories.length > 0) {
     const firstCategory = product.categories[0]
     // 检查 firstCategory 是对象还是 ID
     if (typeof firstCategory === 'object' && firstCategory !== null) {
+      categoryId = firstCategory.id
       categoryName = firstCategory.title
-      categorySlug = firstCategory.slug
+    } else if (typeof firstCategory === 'number') {
+      // 如果是 ID，可能需要额外查询获取名称，这里先暂用 ID
+      categoryId = firstCategory
+      categoryName = `Category ${firstCategory}`
     }
   }
 
@@ -36,7 +40,7 @@ export function ProductBreadcrumb({ product }: BreadcrumbProps) {
             <>
               <li>
                 <Link
-                  href={`/categories/${categorySlug}`}
+                  href={`/shop?category=${categoryId}`}
                   className="hover:text-gray-700 hover:underline"
                 >
                   {categoryName}
@@ -54,7 +58,7 @@ export function ProductBreadcrumb({ product }: BreadcrumbProps) {
               <li className="text-gray-400">/</li>
             </>
           )}
-          <li className="text-gray-700 font-medium truncate max-w-[200px]">
+          <li className="text-gray-700 font-medium truncate max-w-[200px] md:max-w-[400px]">
             {product.title}
           </li>
         </ol>
@@ -79,7 +83,7 @@ export function ProductBreadcrumb({ product }: BreadcrumbProps) {
                 "position": 2,
                 "name": categoryName || "Products",
                 "item": categoryName 
-                  ? `${siteUrl}/categories/${categorySlug}`
+                  ? `${siteUrl}/shop?category=${categoryId}`
                   : `${siteUrl}/shop`
               },
               {
