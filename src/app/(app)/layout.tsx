@@ -11,7 +11,7 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import React from 'react'
 import './globals.css'
-import { Analytics } from '@vercel/analytics/next'  // ✅ 在文件顶部添加这行导入
+import { Analytics } from '@vercel/analytics/next'  
 
 
 /* const { SITE_NAME, TWITTER_CREATOR, TWITTER_SITE } = process.env
