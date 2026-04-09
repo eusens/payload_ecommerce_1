@@ -18,8 +18,8 @@ importers:
         specifier: 3.80.0
         version: 3.80.0(payload@3.80.0(graphql@16.13.2)(typescript@5.7.2))
       '@payloadcms/email-resend':
-        specifier: ^3.80.0
-        version: 3.81.0(payload@3.80.0(graphql@16.13.2)(typescript@5.7.2))
+        specifier: 3.80.0
+        version: 3.80.0(payload@3.80.0(graphql@16.13.2)(typescript@5.7.2))
       '@payloadcms/live-preview-react':
         specifier: 3.80.0
         version: 3.80.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -1648,11 +1648,11 @@ packages:
     peerDependencies:
       payload: 3.80.0
 
-  '@payloadcms/email-resend@3.81.0':
-    resolution: {integrity: sha512-1xwjZ5HXvGyKisi0YtYviTRPz67nnkKRaopxjs4jFq+41AQjNuDBicg/FuwoXLfa9HL1ADkcBSsXY+7VaJw01g==}
+  '@payloadcms/email-resend@3.80.0':
+    resolution: {integrity: sha512-ykTI9ZKqFWTaFIzeFcQ1kv04SekJhoHcN2FaYQy/r1p9nE4rpZWkh9dMlSu/fTirYqZ2CQVUtuq26AVENNSSSg==}
     engines: {node: ^18.20.2 || >=20.9.0}
     peerDependencies:
-      payload: 3.81.0
+      payload: 3.80.0
 
   '@payloadcms/graphql@3.80.0':
     resolution: {integrity: sha512-AlJcFI/R+4SRPWW51ny2BsIj+4j6qVxyn0W5Kz1f5MMfheuD844tc92O+IwmUsrRsb0l6zv3zI3G3M6V2WdFFQ==}
@@ -7496,7 +7496,7 @@ snapshots:
       nodemailer: 7.0.12
       payload: 3.80.0(graphql@16.13.2)(typescript@5.7.2)
 
-  '@payloadcms/email-resend@3.81.0(payload@3.80.0(graphql@16.13.2)(typescript@5.7.2))':
+  '@payloadcms/email-resend@3.80.0(payload@3.80.0(graphql@16.13.2)(typescript@5.7.2))':
     dependencies:
       payload: 3.80.0(graphql@16.13.2)(typescript@5.7.2)
 
