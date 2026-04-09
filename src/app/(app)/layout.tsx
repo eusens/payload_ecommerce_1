@@ -11,7 +11,7 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import React from 'react'
 import './globals.css'
-// import { Analytics } from '@vercel/analytics/next'  
+import { Analytics } from '@vercel/analytics/next'  
 
 
 /* const { SITE_NAME, TWITTER_CREATOR, TWITTER_SITE } = process.env
@@ -61,7 +61,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <Header />
           <main>{children}</main>
           <Footer />
-          {/* <Analytics /> */}
+          <Analytics />
         </Providers>
       </body>
     </html>
