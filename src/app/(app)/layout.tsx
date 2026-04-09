@@ -11,10 +11,12 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import React from 'react'
 import './globals.css'
+import { Analytics } from '@vercel/analytics/next'  // ✅ 在文件顶部添加这行导入
+
 
 /* const { SITE_NAME, TWITTER_CREATOR, TWITTER_SITE } = process.env
-const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL
+  ? `https://${process.env.NEXT_PUBLIC_SERVER_URL}`
   : 'http://localhost:3000'
 const twitterCreator = TWITTER_CREATOR ? ensureStartsWith(TWITTER_CREATOR, '@') : undefined
 const twitterSite = TWITTER_SITE ? ensureStartsWith(TWITTER_SITE, 'https://') : undefined
@@ -59,6 +61,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <Header />
           <main>{children}</main>
           <Footer />
+          <Analytics />
         </Providers>
       </body>
     </html>
