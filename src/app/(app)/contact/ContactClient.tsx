@@ -1,7 +1,7 @@
 // src/app/(app)/contact/ContactClient.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'  // ← 添加 useRef
 import { useSearchParams } from 'next/navigation'
 
 export default function ContactClient() {
@@ -9,6 +9,9 @@ export default function ContactClient() {
   const [loading, setLoading] = useState(false)
   const searchParams = useSearchParams()
   const [product, setProduct] = useState('')
+  
+  // 添加蜜罐 ref
+  const honeypotRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const productParam = searchParams.get('product')
@@ -25,10 +28,22 @@ export default function ContactClient() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    
+    // 蜜罐检测：如果隐藏字段被填了，说明是机器人
+    if (honeypotRef.current && honeypotRef.current.value !== '') {
+      console.log('Bot detected, rejecting silently')
+      setStatus('Message sent successfully!')  // 假装成功
+      e.currentTarget.reset()
+      return
+    }
+    
     setLoading(true)
     setStatus('Sending...')
 
     const formData = new FormData(e.currentTarget)
+    
+    // 注意：不要提交蜜罐字段到 API，所以删掉它
+    formData.delete('website')
 
     const res = await fetch('/api/contact', {
       method: 'POST',
@@ -101,6 +116,17 @@ export default function ContactClient() {
           rows={5}
           className="w-full border px-4 py-2 rounded"
         />
+        
+        {/* 蜜罐字段 - 用户看不见，机器人会填 */}
+        <input
+          ref={honeypotRef}
+          type="text"
+          name="website"
+          style={{ display: 'none' }}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+        
         <button
           type="submit"
           disabled={loading}
