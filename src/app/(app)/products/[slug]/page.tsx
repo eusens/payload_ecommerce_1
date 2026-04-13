@@ -262,7 +262,7 @@ export async function generateStaticParams() {
     sort: '-updatedAt',  // 优先生成最新更新的产品
   })
   
-  console.log(`🔨 预生成 ${products.docs.length} 个产品页面`)
+  // console.log(`🔨 预生成 ${products.docs.length} 个产品页面`)
   
   return products.docs.map((product) => ({
     slug: product.slug,
