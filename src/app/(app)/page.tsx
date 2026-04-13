@@ -18,7 +18,7 @@ export default async function HomePage() {
   // 获取最新产品（按创建时间倒序）
   const latestProducts = await payload.find({
     collection: 'products',
-    limit: 6,
+    limit: 20,
     sort: '-createdAt',
     where: { _status: { equals: 'published' } },
     depth: 2,
