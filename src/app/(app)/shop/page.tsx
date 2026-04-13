@@ -15,7 +15,7 @@ import React from 'react'
 
 export const metadata = {
   description: 'Search for products in the store.',
-  title: 'Shop',
+  title: 'Industrial Automation Components Shop',
 }
 
 type SearchParams = { [key: string]: string | string[] | undefined }
