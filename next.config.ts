@@ -11,7 +11,7 @@ const NEXT_PUBLIC_SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://loc
 
 const nextConfig: NextConfig = {
   images: {
-    unoptimized: true,
+    // unoptimized: true,
     dangerouslyAllowLocalIP: true,  // ← 正确的属性名
     localPatterns: [
       {
