@@ -9,7 +9,7 @@ const NEXT_PUBLIC_SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://loc
 
 export const metadata = {
   title: 'Eusens Automation - Industrial Automation Solutions',
-  description: 'Professional automation distributor based in Vietnam, serving Food & Beverage, Cement, Mining, Oil & Gas, and more.',
+  description: 'Professional automation distributor based in China, serving Food & Beverage, Cement, Mining, Oil & Gas, and more.',
 }
 
 export default async function HomePage() {

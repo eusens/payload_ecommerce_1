@@ -4,7 +4,7 @@ import React from 'react'
 
 export const metadata = {
   title: 'About Us - Eusens Automation',
-  description: 'Professional automation distributor based in Vietnam, serving Food & Beverage, Cement, Mining, Oil & Gas, and more.',
+  description: 'Professional automation distributor based in China, serving Food & Beverage, Cement, Mining, Oil & Gas, and more.',
 }
 
 export default function AboutPage() {
@@ -23,7 +23,7 @@ export default function AboutPage() {
         <div>
           <h2 className="text-2xl font-semibold mb-4">Who We Are</h2>
           <p className="text-muted-foreground mb-4 leading-relaxed">
-            An automation distributor based in Vietnam. Eusens is a professional supplier serving various 
+            An automation distributor based in China. Eusens is a professional supplier serving various 
             industries including Food & Beverage, Cement, Mining, Oil & Gas, Port Cranes, and On-shore/Off-shore Cranes.
           </p>
           <p className="text-muted-foreground mb-4 leading-relaxed">
