@@ -27,27 +27,27 @@ export const products: ProductData[] = [
       "slug": "1756-a10b",
       "imageUrl": "https://sanityimages.s3.amazonaws.com/IMG_1851.webp",
       "galleryImages": [
-        "https://payloadcms-ecommerce.s3.amazonaws.com/HYDAC0240R010BN3HC-1.jpg",
-        "https://payloadcms-ecommerce.s3.amazonaws.com/MOOGJ761-003A-2.jpg"
+        "https://payloadcms-ecommerce.s3.amazonaws.com/Rexroth0820055501-1.jpg",
+        "https://payloadcms-ecommerce.s3.amazonaws.com/EltraEL40A1000Z528P6X3PR.1-2.jpg"
       ],
       "categorySlug": "allen-bradley",
       "categoryTitle": "Allen Bradley"
     },
     {
-      "title": "1786-RG6",
-      "description": "Allen-Bradley 1786-RG6 Coaxial Cable (meters)",
-      "longDescription": "Allen-Bradley 1786-RG6 Coaxial Cable (meters)",
-      "inventory": "6",
-      "price_in_u_s_d": "33162",
-      "meta_title": "1786-RG6",
-      "meta_description": "Allen-Bradley 1786-RG6 Coaxial Cable (meters)",
-      "slug": "1786-rg6",
-      "imageUrl": "https://sanityimages.s3.amazonaws.com/IMG_2540.webp",
+      "title": "6ES7 972-0BB12-0XA0",
+      "description": "Connector PROFIBUS Connection plug 12 MBit/s 90掳 Sealed",
+      "longDescription": "Connector PROFIBUS Connection plug 12 MBit/s 90掳 Sealed",
+      "inventory": "1",
+      "price_in_u_s_d": "14372",
+      "meta_title": "6ES7 972-0BB12-0XA0",
+      "meta_description": "Connector PROFIBUS Connection plug 12 MBit/s 90掳 Sealed",
+      "slug": "6es7-972-0bb12-0xa0",
+      "imageUrl": "https://sanityimages.s3.amazonaws.com/IMG_5490.webp",
       "galleryImages": [
-        "https://payloadcms-ecommerce.s3.amazonaws.com/MAC56C-56-RA-5.jpg",
-        "https://payloadcms-ecommerce.s3.amazonaws.com/ATOSE-ME-L-01H_40DL67SA-1.jpg"
+        "https://payloadcms-ecommerce.s3.amazonaws.com/PARKER944494Q-1.jpg",
+        "https://payloadcms-ecommerce.s3.amazonaws.com/ATOSE-ME-T-05H_40DH07SA-3.jpg"
       ],
-      "categorySlug": "allen-bradley",
-      "categoryTitle": "Allen Bradley"
+      "categorySlug": "siemens",
+      "categoryTitle": "Siemens"
     }
   ]

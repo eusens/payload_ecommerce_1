@@ -9,8 +9,8 @@ import { products, ProductData } from './products'
 // 第二次运行: START_INDEX = 200, END_INDEX = 400
 // 第三次运行: START_INDEX = 400, END_INDEX = 600
 // ... 以此类推
-const START_INDEX = 0      // ← 修改这里：起始索引
-const END_INDEX = 200      // ← 修改这里：结束索引（不包含）
+const START_INDEX = 900      // ← 修改这里：起始索引
+const END_INDEX = 1000      // ← 修改这里：结束索引（不包含）
 
 const META_TITLE_MAX = 60
 const META_DESCRIPTION_MAX = 150

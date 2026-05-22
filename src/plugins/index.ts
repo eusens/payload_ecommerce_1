@@ -19,7 +19,7 @@ import { isDocumentOwner } from '@/access/isDocumentOwner'
 import { s3Storage } from '@payloadcms/storage-s3'  // 👈 添加这个导入
 
 const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Ecommerce Template` : 'Payload Ecommerce Template'
+  return doc?.title ? `${doc.title} | Newsinoenergy Ecommerce Template` : 'Newsinoenergy Ecommerce Template'
 }
 
 const generateURL: GenerateURL<Product | Page> = ({ doc }) => {
