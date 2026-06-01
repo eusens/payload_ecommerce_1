@@ -4,20 +4,20 @@
 import { useState, useEffect, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
+import { Turnstile } from '@marsidev/react-turnstile'
 import {
   Phone, Mail, MapPin, MessageCircle, MessageSquare,
   Truck, ShoppingCart, ShoppingBag, Headphones, LaptopMinimalCheck
 } from 'lucide-react'
 
 export default function ContactClient() {
-  // 表单相关状态
   const [status, setStatus] = useState('')
   const [loading, setLoading] = useState(false)
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
   const searchParams = useSearchParams()
   const [product, setProduct] = useState('')
   const honeypotRef = useRef<HTMLInputElement>(null)
 
-  // 服务承诺数据
   const features = [
     { icon: Truck, title: "Fast SHIPPING", subtitle: "From All around the world" },
     { icon: ShoppingCart, title: "Order Online", subtitle: "From anywhere" },
@@ -26,7 +26,6 @@ export default function ContactClient() {
     { icon: ShoppingBag, title: "FREE RETURNS", subtitle: "Track or off orders" },
   ]
 
-  // 从 URL 参数获取产品名
   useEffect(() => {
     const productParam = searchParams.get('product')
     if (productParam) {
@@ -40,7 +39,6 @@ export default function ContactClient() {
     }
   }, [searchParams])
 
-  // 表单提交
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -49,6 +47,12 @@ export default function ContactClient() {
       console.log('Bot detected, rejecting silently')
       setStatus('Message sent successfully!')
       e.currentTarget.reset()
+      return
+    }
+
+    // Turnstile 验证
+    if (!turnstileToken) {
+      setStatus('Please complete the verification')
       return
     }
 
@@ -61,6 +65,7 @@ export default function ContactClient() {
     const res = await fetch('/api/contact', {
       method: 'POST',
       body: JSON.stringify({
+        turnstileToken,
         fullName: formData.get('fullName'),
         email: formData.get('email'),
         company: formData.get('company'),
@@ -77,21 +82,22 @@ export default function ContactClient() {
     setLoading(false)
     setStatus(data.message || (res.ok ? 'Sent!' : 'Failed'))
 
-    if (res.ok) e.currentTarget.reset()
+    if (res.ok) {
+      e.currentTarget.reset()
+      setTurnstileToken(null) // 重置 token
+    }
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 font-sans">
-      {/* ========== 页面标题 ========== */}
       <h1 className="text-4xl font-bold text-center mb-4">Contact Us</h1>
       <p className="text-center text-gray-600 max-w-2xl mx-auto mb-10">
         We are here to answer any questions you may have about our products and services.
         Reach out to us and we&apos;ll respond as soon as we can.
       </p>
 
-      {/* ========== 联系方式卡片 ========== */}
+      {/* 联系方式卡片 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6 mb-10">
-        {/* 电话 */}
         <div className="bg-gray-100 p-6 rounded-lg text-center shadow hover:shadow-md transition">
           <Phone className="w-8 h-8 mx-auto mb-3 text-blue-600" />
           <h2 className="font-semibold text-lg mb-2">Call Us</h2>
@@ -99,14 +105,12 @@ export default function ContactClient() {
           <p className="text-gray-500 text-sm">Mon - Fri, 9am - 6pm</p>
         </div>
 
-        {/* 邮箱 */}
         <div className="bg-gray-100 p-6 rounded-lg text-center shadow hover:shadow-md transition">
           <Mail className="w-8 h-8 mx-auto mb-3 text-blue-600" />
           <h2 className="font-semibold text-lg mb-2">Email Us</h2>
           <p className="text-gray-700 break-all">sales@newsinoenergy.com</p>
         </div>
 
-        {/* 地址 */}
         <div className="bg-gray-100 p-6 rounded-lg text-center shadow hover:shadow-md transition">
           <MapPin className="w-8 h-8 mx-auto mb-3 text-blue-600" />
           <h2 className="font-semibold text-lg mb-2">Address</h2>
@@ -114,22 +118,15 @@ export default function ContactClient() {
           <p className="text-gray-700">Guangzhou, China</p>
         </div>
 
-        {/* WhatsApp */}
         <div className="bg-gray-100 p-6 rounded-lg text-center shadow hover:shadow-md transition">
           <MessageCircle className="w-8 h-8 mx-auto mb-3 text-green-600" />
           <h2 className="font-semibold text-lg mb-2">WhatsApp</h2>
-          <a
-            href="https://wa.me/8613760812861"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-green-600 font-medium hover:underline"
-          >
+          <a href="https://wa.me/8613760812861" target="_blank" rel="noopener noreferrer" className="text-green-600 font-medium hover:underline">
             Chat on WhatsApp
           </a>
           <p className="text-gray-500 text-sm mt-2">+86 137 6081 2861</p>
         </div>
 
-        {/* 微信 */}
         <div className="bg-gray-100 p-6 rounded-lg text-center shadow hover:shadow-md transition">
           <MessageSquare className="w-8 h-8 mx-auto mb-3 text-green-600" />
           <h2 className="font-semibold text-lg mb-2">WeChat</h2>
@@ -145,17 +142,12 @@ export default function ContactClient() {
         </div>
       </div>
 
-      {/* ========== 地图 ========== */}
+      {/* 地图 */}
       <div className="relative w-full h-80 rounded-lg overflow-hidden shadow-md mb-12">
-        <Image
-          src="/images/locationmap.png"
-          alt="Company location map"
-          fill
-          className="object-cover"
-        />
+        <Image src="/images/locationmap.png" alt="Company location map" fill className="object-cover" />
       </div>
 
-      {/* ========== 询价表单 ========== */}
+      {/* 询价表单 */}
       <div className="max-w-3xl mx-auto mb-12">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold mb-2">Request a Quote</h2>
@@ -167,19 +159,19 @@ export default function ContactClient() {
             name="fullName"
             placeholder="Full Name *"
             required
-            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
           />
           <input
             name="email"
             type="email"
             placeholder="Email *"
             required
-            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
           />
           <input
             name="company"
             placeholder="Company"
-            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
           />
           <input
             name="product"
@@ -187,25 +179,35 @@ export default function ContactClient() {
             onChange={(e) => setProduct(e.target.value)}
             placeholder="Product / Model *"
             required
-            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
           />
           <input
             name="quantity"
             placeholder="Quantity (e.g. 2 units)"
-            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
           />
           <input
             name="country"
             placeholder="Country (e.g. UAE, USA, Germany)"
-            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
           />
           <textarea
             name="message"
             placeholder="Project Details / Requirements *"
             required
             rows={5}
-            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
           />
+
+          {/* Turnstile 验证 */}
+          <div className="flex justify-center">
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+              onSuccess={(token) => setTurnstileToken(token)}
+              onExpire={() => setTurnstileToken(null)}
+              onError={() => setTurnstileToken(null)}
+            />
+          </div>
 
           {/* 蜜罐字段 */}
           <input
@@ -219,7 +221,7 @@ export default function ContactClient() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !turnstileToken}
             className="bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 px-6 py-3 rounded w-full transition-colors disabled:opacity-50"
           >
             {loading ? 'Sending...' : 'Request Quote'}
@@ -227,20 +229,20 @@ export default function ContactClient() {
         </form>
 
         {status && (
-          <p className={`mt-4 text-center ${status.includes('Sent') || status.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
+          <p className={`mt-4 text-center ${status.includes('Sent') ? 'text-green-600' : 'text-red-600'}`}>
             {status}
           </p>
         )}
       </div>
 
-      {/* ========== 服务承诺 ========== */}
-      <div className="bg-gray-100 py-10 rounded-lg mt-6">
+      {/* 服务承诺 */}
+      <div className="bg-gray-100 dark:bg-gray-800 py-10 rounded-lg mt-6">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
           {features.map((item, idx) => (
             <div key={idx} className="flex flex-col items-center">
               <item.icon className="w-12 h-12 mb-3 text-blue-600" />
-              <h3 className="font-bold text-sm md:text-base">{item.title}</h3>
-              <p className="text-xs text-gray-600">{item.subtitle}</p>
+              <h3 className="font-bold text-sm md:text-base dark:text-white">{item.title}</h3>
+              <p className="text-xs text-gray-600 dark:text-gray-400">{item.subtitle}</p>
             </div>
           ))}
         </div>
