@@ -12,6 +12,7 @@ import { GeistMono } from 'geist/font/mono'
 import React from 'react'
 import './globals.css'
 import { Analytics } from '@vercel/analytics/next'  
+import Script from 'next/script'
 
 
 /* const { SITE_NAME, TWITTER_CREATOR, TWITTER_SITE } = process.env
@@ -63,6 +64,12 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <Footer />
           <Analytics />
         </Providers>
+         {/* 在这里加入 Ahrefs 代码 */}
+      <Script 
+        src="https://analytics.ahrefs.com/analytics.js" 
+        data-key="jnJ5kh9ZdqdOQieYhYyxBg" 
+        strategy="afterInteractive"
+      />
       </body>
     </html>
   )
